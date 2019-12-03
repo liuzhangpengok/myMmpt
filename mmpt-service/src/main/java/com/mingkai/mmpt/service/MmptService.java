@@ -55,8 +55,8 @@ public class MmptService {
 
     }
 
-    public MmptDto queryByMmptDto(MmptQueryDto mmptQueryDto) {
-        MmptDto mmptDto = new MmptDto();
+    public List<MmptDto> queryByMmptDto(MmptQueryDto mmptQueryDto) {
+        List<MmptDto> mmptDtos = new ArrayList<>();
         MmptExample e = new MmptExample();
         MmptExample.Criteria c = e.createCriteria();
         if (null != mmptQueryDto.getMmptId()){
@@ -67,35 +67,38 @@ public class MmptService {
         }
         if (null != mmptQueryDto.getOrderBy()){
             if (mmptQueryDto.getOrderBy().equals(MmptQueryType.NEW.getValue())){
-                e.setOrderByClause("create_time desc limit 0,8");
+                e.setOrderByClause("create_time desc ");
             }
             if (mmptQueryDto.getOrderBy().equals(MmptQueryType.CHOICE.getValue())){
-                e.setOrderByClause("buy_num desc limit 8,16");
+                e.setOrderByClause("buy_num desc ");
             }
             if (mmptQueryDto.getOrderBy().equals(MmptQueryType.CLICK_NUM.getValue())){
-                e.setOrderByClause("click_num desc limit 0,8");
+                e.setOrderByClause("click_num desc ");
             }
             if (mmptQueryDto.getOrderBy().equals(MmptQueryType.BUYED_NUM.getValue())){
-                e.setOrderByClause("buy_num desc limit 0,8");
+                e.setOrderByClause("buy_num desc ");
             }
         }
-        List<Mmpt> mmpts = mmptMapper.selectByExample(e);
-        if (!mmpts.isEmpty()){
-            Mmpt mmpt = mmpts.get(0);
-            BeanUtils.copyProperties(mmpt,mmptDto);
+        List<Mmpt> mmpts = mmptMapper.selectByExampleWithBLOBs(e);
+        if (mmpts.isEmpty()){
+           return null;
         }
-        List<MmptResult> mmptResults = mmptResultService.selectMmptResultsByMmptId(mmptQueryDto.getMmptId());
 
-        List<MmptResultDto> mmptResultDtos = new ArrayList<>();
-        if (!mmptResults.isEmpty()){
+        mmpts.forEach(mmpt -> {
+            MmptDto mmptDto = new MmptDto();
+            BeanUtils.copyProperties(mmpt,mmptDto);
+            List<MmptResult> mmptResults = mmptResultService.selectMmptResultsByMmptId(mmpt.getId());
+            List<MmptResultDto> mmptResultDtos = new ArrayList<>();
             mmptResults.forEach(mmptResult -> {
                 MmptResultDto mmptResultDto = new MmptResultDto();
                 BeanUtils.copyProperties(mmptResult,mmptResultDto);
                 mmptResultDtos.add(mmptResultDto);
             });
-        }
-        mmptDto.setMmptResultDtoList(mmptResultDtos);
-        return mmptDto;
+            mmptDto.setMmptResultDtoList(mmptResultDtos);
+            mmptDtos.add(mmptDto);
+        });
+
+        return mmptDtos;
 
 
 

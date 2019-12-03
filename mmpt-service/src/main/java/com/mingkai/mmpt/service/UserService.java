@@ -36,4 +36,8 @@ public class UserService {
         }
         return null;
     }
+
+    public User queryUserById(Long userId) {
+        return userMapper.selectByPrimaryKey(userId);
+    }
 }

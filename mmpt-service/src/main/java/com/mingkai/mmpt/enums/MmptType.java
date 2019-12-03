@@ -3,16 +3,19 @@ package com.mingkai.mmpt.enums;
 /**
  * 问卷排序类型
  */
-public enum MmptQueryType {
+public enum MmptType {
 
 	//
-	NEW(1,"按时间最新"),
-	CHOICE(2,"按精选"),
-	CLICK_NUM(3,"按点击次数"),
-	BUYED_NUM(4,"按购买次数");
+	SEX(1,"两性"),
+	EMOTION(2,"情感"),
+	NATURE(3,"性格"),
+	HEALTHY(4,"健康"),
+	PARENTING(5,"亲子"),
+	ABILITY(6,"能力");
 
 
-	MmptQueryType(Integer value, String name){
+
+	MmptType(Integer value, String name){
 		this.value=value;
 		this.name=name;
 	}

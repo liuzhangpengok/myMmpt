@@ -6,6 +6,7 @@ import com.mingkai.mmpt.service.MmptService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -31,6 +32,12 @@ public class FileController {
     private MmptService mmptService;
 
 
+    @Value("${file.path}")
+    private String filePath;
+
+    @Value("${file.url}")
+    private String fileUrl;
+
 
     @RequestMapping("/uploadFile")
     @ResponseBody
@@ -51,8 +58,7 @@ public class FileController {
         // 返回客户端 文件地址 URL
 //        String url = "http://47.100.204.62:8080/advermachine"+"/upload/" + fileName;
 
-         String filePath = "D://temp-rainy//"; // 上传后的路径
-         String url = "http://localhost:8090/mmpt/temp-rainy/" + fileName;
+         String url = fileUrl + fileName;
 
 //        File dest = new File(ApiConstant.UPLOAD_PATH + fileName);
 
@@ -72,6 +78,7 @@ public class FileController {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        commonResp.setErrorCode(CommonResp.SUCCESS_CODE);
         commonResp.setRespObject(url);
         return commonResp;
 

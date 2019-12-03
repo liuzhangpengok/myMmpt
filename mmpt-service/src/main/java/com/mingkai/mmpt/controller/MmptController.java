@@ -1,6 +1,9 @@
 package com.mingkai.mmpt.controller;
 
 
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import com.mingkai.mmpt.dto.CommonResp;
 import com.mingkai.mmpt.dto.MmptDto;
 import com.mingkai.mmpt.dto.MmptQueryDto;
@@ -13,6 +16,8 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+
+import java.util.List;
 
 
 @Controller
@@ -60,12 +65,20 @@ public class MmptController {
 
     @RequestMapping("/queryMmpt")
     @ResponseBody
-    public CommonResp<MmptDto> queryMmpt(@RequestBody MmptQueryDto mmptQueryDto){
-        CommonResp<MmptDto> commonResp = new CommonResp<>();
+    public CommonResp<PageInfo<MmptDto>> queryMmpt(@RequestBody MmptQueryDto mmptQueryDto){
+        Page page = PageHelper.startPage(mmptQueryDto.getPageNum(), mmptQueryDto.getPageSize());
+
+        CommonResp<PageInfo<MmptDto>> commonResp = new CommonResp<>();
         commonResp.setErrorCode(CommonResp.SUCCESS_CODE);
         try {
-            MmptDto mmptDto = mmptService.queryByMmptDto(mmptQueryDto);
-            commonResp.setRespObject(mmptDto);
+            List<MmptDto> mmptDtos = mmptService.queryByMmptDto(mmptQueryDto);
+            PageInfo<MmptDto> mmptDtoPageInfo = new PageInfo<>(mmptDtos);
+            mmptDtoPageInfo.setTotal(page.getTotal());
+
+//            Page<MmptDto> mmptDtoPage = new Page<MmptDto>();
+
+          //  Page<MmptDto> mmptDtoPage = new Page<>(mmptDtoPageInfo);
+            commonResp.setRespObject(mmptDtoPageInfo);
         }catch (Exception e){
             log.error("queryMmpt异常",e);
             commonResp.setErrorCode(CommonResp.COMMON_FAIL_CODE);

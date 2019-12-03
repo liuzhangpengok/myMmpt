@@ -4,7 +4,7 @@ package com.mingkai.mmpt.dto;
  * @Author [mingkai]
  * @create 2019/11/18 17:22
  */
-public class MmptQueryDto {
+public class MmptQueryDto extends PageQueryDto{
 
     private Long mmptId;
 

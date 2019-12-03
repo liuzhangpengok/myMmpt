@@ -3,22 +3,24 @@ package com.mingkai.mmpt.enums;
 /**
  * 问卷排序类型
  */
-public enum MmptQueryType {
+public enum ActivityType {
 
 	//
-	NEW(1,"按时间最新"),
-	CHOICE(2,"按精选"),
-	CLICK_NUM(3,"按点击次数"),
-	BUYED_NUM(4,"按购买次数");
+	SHARE(1,2000L,"分享"),
+	CLICK_SHARE(2,1000L,"点击分享");
 
-
-	MmptQueryType(Integer value, String name){
+	ActivityType(Integer value,Long balance, String name){
 		this.value=value;
 		this.name=name;
+		this.balance=balance;
+
 	}
 
 	private Integer value;
 	private String name;
+	private Long balance;
+
+
 	public Integer getValue() {
 		return value;
 	}
@@ -33,5 +35,11 @@ public enum MmptQueryType {
 	}
 
 
+	public Long getBalance() {
+		return balance;
+	}
 
+	public void setBalance(Long balance) {
+		this.balance = balance;
+	}
 }
